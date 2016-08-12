@@ -153,7 +153,18 @@ static void IterateRoleSimPlus(const SimMat &sim_score, SimMat &new_score) {
 
 static void IterateAlphaRoleSim(const SimMat &sim_score, SimMat &new_score) {
   for (int i = 1; i <= n1; i++) {
+    // Find highest score
+    double tmp_max = 0;
+    for (int j = 1; j <= n2; j++)
+      if (sim_score[i][j] > tmp_max)
+        tmp_max = sim_score[i][j];
+
+    double theta = tmp_max * ALPHA;
     for (int j = 1; j <= n2; j++) {
+      if (sim_score[i][j] < theta) {
+        new_score[i][j] = sim_score[i][j];
+        continue;
+      }
       if (G1[i].size() > 0 && G2[j].size() > 0)
         new_score[i][j] = (MaxMatch(i, j, sim_score, G1, G2)
                         + MaxMatch(i, j, sim_score, RG1, RG2))
@@ -213,5 +224,6 @@ void CalcSimilarity(algo a) {
     default:
       assert(0);
   }
-  PrintMatrix(sim_score[ITER_NUM & 0x1]);
+  //PrintMatrix(sim_score[ITER_NUM & 0x1]);
+  OutputMatrix(sim_score[ITER_NUM & 0x1]);
 }

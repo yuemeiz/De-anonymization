@@ -8,6 +8,7 @@
 
 #define ITER_NUM 5
 #define BETA 0.15
+#define ALPHA 0.85
 
 using namespace std;
 
@@ -41,3 +42,4 @@ extern void CalcSimilarity(algo a);
 extern void MatchGraph(algo a);
 
 void PrintMatrix(const SimMat &sim_score);
+void OutputMatrix(const SimMat &sim_score);

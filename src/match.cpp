@@ -52,7 +52,7 @@ static int GetMax() {
 
 static void MatchNode(int idx, int idy) {
   assert(node_match[idx] == 0 && rev_node_match[idy] == 0);
-  printf("match: %d %d\n", idx, idy);
+  //printf("match: %d %d\n", idx, idy);
   node_match[idx] = idy;
   rev_node_match[idy] = idx;
   total_cnt++;
@@ -71,10 +71,11 @@ static void MatchNode(int idx, int idy) {
           top[i] = j;
         }
     }
-  printf("conflict: %d\n", conflict);
+  //printf("conflict: %d\n", conflict);
 }
 
-static void IncreaseNb(int idx, int idy) {
+static void IncreaseNb(int idx, int idy, const SimMat &score) {
+  (void) score;
   int nbx = 0, nby = 0;
   for (int i = 0; i < G1[idx].size(); i++)
     for (int j = 0; j < G2[idy].size(); j++) {
@@ -96,7 +97,7 @@ void MatchGraph(algo a) {
     int idx = GetMax();
     assert(idx != 0);
     MatchNode(idx, top[idx]);
-    IncreaseNb(idx, top[idx]);
+    IncreaseNb(idx, top[idx], sim_score[ITER_NUM & 0x1]);
     //PrintMatrix(rank_score);
   }
   printf("%d\n", correct_cnt);
