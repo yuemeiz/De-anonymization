@@ -1,10 +1,10 @@
-#include "preprocess.h"
-#include "similarity.h"
+#include "utility.h"
 
 using namespace std;
 
 int main() {
 	PreprocessGraph();
-	CalcSimilarity(5);
+	CalcSimilarity();
+	MatchGraph();
 	return 0;
 }

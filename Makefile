@@ -5,7 +5,10 @@ OBJ_DIR = object
 CXXFLAGS = -Wall -std=c++11
 CXXFLAGS += -I$(INC_DIR)
 EXEC = main
-OBJECTS =  $(OBJ_DIR)/main.o
+OBJECTS =  $(OBJ_DIR)/main.o \
+		   $(OBJ_DIR)/preprocess.o \
+		   $(OBJ_DIR)/similarity.o \
+		   $(OBJ_DIR)/match.o
 
 all: $(EXEC)
 
@@ -16,4 +19,4 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	  $(COMPILER) -c $(CXXFLAGS) $^ -o $@
 
 clean:
-	rm $(OBJECTS) $(EXEC)
+	rm -f $(OBJECTS) $(EXEC)
