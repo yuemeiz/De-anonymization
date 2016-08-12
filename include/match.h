@@ -14,4 +14,4 @@ static int GetMax();
 static void MatchNode(int idx, int idy);
 static void IncreaseNb(int idx, int idy);
 
-void MatchGraph();
+void MatchGraph(algo a);

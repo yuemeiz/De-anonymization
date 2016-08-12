@@ -3,8 +3,9 @@
 using namespace std;
 
 int main() {
-	PreprocessGraph();
-	CalcSimilarity();
-	MatchGraph();
+	algo a = ROLESIM_PLUS;
+	PreprocessGraph(a);
+	CalcSimilarity(a);
+	MatchGraph(a);
 	return 0;
 }

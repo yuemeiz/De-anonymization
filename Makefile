@@ -8,7 +8,8 @@ EXEC = main
 OBJECTS =  $(OBJ_DIR)/main.o \
 		   $(OBJ_DIR)/preprocess.o \
 		   $(OBJ_DIR)/similarity.o \
-		   $(OBJ_DIR)/match.o
+		   $(OBJ_DIR)/match.o \
+		   $(OBJ_DIR)/utility.o
 
 all: $(EXEC)
 
