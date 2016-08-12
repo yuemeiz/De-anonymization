@@ -52,7 +52,7 @@ static int GetMax() {
 
 static void MatchNode(int idx, int idy) {
   assert(node_match[idx] == 0 && rev_node_match[idy] == 0);
-  //printf("match: %d %d\n", idx, idy);
+  printf("match: %d %d\n", idx, idy);
   node_match[idx] = idy;
   rev_node_match[idy] = idx;
   total_cnt++;
@@ -90,15 +90,53 @@ static void IncreaseNb(int idx, int idy, const SimMat &score) {
 }
 
 void MatchGraph(algo a) {
-  (void) a;
-  
-  Initiate(sim_score[ITER_NUM & 0x1]);
-  while (total_cnt < n1) {
-    int idx = GetMax();
-    assert(idx != 0);
-    MatchNode(idx, top[idx]);
-    IncreaseNb(idx, top[idx], sim_score[ITER_NUM & 0x1]);
-    //PrintMatrix(rank_score);
+  switch (a) {
+    case BASELINE: {
+      Initiate(sim_score[ITER_NUM & 0x1]);
+      while (total_cnt < n1) {
+        int idx = GetMax();
+        assert(idx != 0);
+        MatchNode(idx, top[idx]);
+        //IncreaseNb(idx, top[idx], sim_score[ITER_NUM & 0x1]);
+        //PrintMatrix(rank_score);
+      }
+      printf("%d\n", correct_cnt);
+      break;
+    }
+    case ROLESIM:
+    case ROLESIM_PLUS:
+    case ALPHA_ROLESIM: {
+      Initiate(sim_score[ITER_NUM & 0x1]);
+      while (total_cnt < n1) {
+        int idx = GetMax();
+        assert(idx != 0);
+        MatchNode(idx, top[idx]);
+        IncreaseNb(idx, top[idx], sim_score[ITER_NUM & 0x1]);
+        //PrintMatrix(rank_score);
+      }
+      printf("%d\n", correct_cnt);
+      break;
+    }
+    case ROLESIM_SEED: {
+      Initiate(sim_score[ITER_NUM & 0x1]);
+      // Match seeds
+      set<node_pair>::iterator it;
+      for (it = seed_set.begin(); it != seed_set.end(); it++) {
+        MatchNode(it->id1, it->id2);
+        IncreaseNb(it->id1, it->id2, sim_score[ITER_NUM & 0x1]);
+      }
+      while (total_cnt < n1) {
+        int idx = GetMax();
+        assert(idx != 0);
+        MatchNode(idx, top[idx]);
+        IncreaseNb(idx, top[idx], sim_score[ITER_NUM & 0x1]);
+        //PrintMatrix(rank_score);
+      }
+      printf("%d\n", correct_cnt);
+      break;
+    }
+    case PERCOLATE:
+    default:
+      assert(0);
   }
-  printf("%d\n", correct_cnt);
 }

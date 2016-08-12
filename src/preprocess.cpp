@@ -4,11 +4,9 @@ using namespace std;
 
 // Graph preprocess: read graph and add neighbors to the vector
 void PreprocessGraph(algo a) {
-  (void) a;
-
   printf("read graph\n");
   FILE *fp = nullptr;
-  uint idx, idy;
+  int idx, idy;
 
   fp = fopen("./data/graph1.txt", "r");
   assert(fp != nullptr);
@@ -31,4 +29,14 @@ void PreprocessGraph(algo a) {
     RG2[idy].push_back(idx);
   }
   fclose(fp);
+
+  // Input seed set
+  if (a == ROLESIM_SEED || a == PERCOLATE) {
+    fp = fopen("./data/seed.txt", "r");
+    assert(fp != nullptr);
+    while (fscanf(fp, "%d %d", &idx, &idy) != EOF) {
+      seed_set.insert(node_pair(idx, idy));
+    }
+    fclose(fp);
+  }
 }

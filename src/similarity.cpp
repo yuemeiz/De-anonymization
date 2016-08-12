@@ -44,6 +44,26 @@ static void InitRoleSimPlus() {
   }
 }
 
+static void InitRoleSimSeed() {
+  sim_score[0].resize(n1 + 1);
+  sim_score[1].resize(n1 + 1);
+  for (int i = 1; i <= n1; i++) {
+    sim_score[0][i].resize(n2 + 1);
+    sim_score[1][i].resize(n2 + 1);
+    for (int j = 1; j <= n2; j++) {
+      if (seed_set.find(node_pair(i, j)) != seed_set.end()) {
+        sim_score[0][i][j] = 1;
+        continue;
+      }
+      sim_score[0][i][j] = (min((double)G1[i].size(), (double)G2[j].size())
+                         + min((double)RG1[i].size(), (double)RG2[j].size()))
+                         / (max((double)G1[i].size(), (double)G2[j].size())
+                         + max((double)RG1[i].size(), (double)RG2[j].size()))
+                         * (1 - BETA) + BETA;
+    }
+  }
+}
+
 static double MaxMatch(int x, int y, const SimMat &sim_score,
                        const Graph &G1, const Graph &G2) {
   size_t nx = G1[x].size();
@@ -131,7 +151,7 @@ static void IterateRoleSim(const SimMat &sim_score, SimMat &new_score) {
                         / max((double)G1[i].size(), (double)G2[j].size())
                         * (1 - BETA) + BETA;
       else
-        new_score[i][j] = 0;
+        new_score[i][j] = BETA;
     }
   }
 }
@@ -146,7 +166,7 @@ static void IterateRoleSimPlus(const SimMat &sim_score, SimMat &new_score) {
                         + max((double)RG1[i].size(), (double)RG2[j].size()))
                         * (1 - BETA) + BETA;
       else
-        new_score[i][j] = 0;
+        new_score[i][j] = BETA;
     }
   }
 }
@@ -172,7 +192,26 @@ static void IterateAlphaRoleSim(const SimMat &sim_score, SimMat &new_score) {
                         + max((double)RG1[i].size(), (double)RG2[j].size()))
                         * (1 - BETA) + BETA;
       else
-        new_score[i][j] = 0;
+        new_score[i][j] = BETA;
+    }
+  }
+}
+
+static void IterateRoleSimSeed(const SimMat &sim_score, SimMat &new_score) {
+  for (int i = 1; i <= n1; i++) {
+    for (int j = 1; j <= n2; j++) {
+      if (seed_set.find(node_pair(i, j)) != seed_set.end()) {
+        new_score[i][j] = 1;
+        continue;
+      }
+      if (G1[i].size() > 0 && G2[j].size() > 0)
+        new_score[i][j] = (MaxMatch(i, j, sim_score, G1, G2)
+                        + MaxMatch(i, j, sim_score, RG1, RG2))
+                        / (max((double)G1[i].size(), (double)G2[j].size())
+                        + max((double)RG1[i].size(), (double)RG2[j].size()))
+                        * (1 - BETA) + BETA;
+      else
+        new_score[i][j] = BETA;
     }
   }
 }
@@ -220,6 +259,17 @@ void CalcSimilarity(algo a) {
         IterateAlphaRoleSim(sim_score[old], sim_score[1 - old]);
         //PrintMatrix(sim_score[1 - old]);
       }
+      break;
+    case ROLESIM_SEED:
+      InitRoleSimSeed();
+      //PrintMatrix(sim_score[0]);
+      for (int i = 0; i < ITER_NUM; i++) {
+        int old = i & 0x1;
+        printf("iteration %d\n", i);
+        IterateRoleSimSeed(sim_score[old], sim_score[1 - old]);
+        //PrintMatrix(sim_score[1 - old]);
+      }
+    case PERCOLATE:
       break;
     default:
       assert(0);
