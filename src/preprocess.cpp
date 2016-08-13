@@ -4,7 +4,6 @@ using namespace std;
 
 // Graph preprocess: read graph and add neighbors to the vector
 void PreprocessGraph(algo a) {
-  printf("read graph\n");
   FILE *fp = nullptr;
   int idx, idy;
 

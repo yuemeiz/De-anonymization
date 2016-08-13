@@ -229,7 +229,7 @@ void CalcSimilarity(algo a) {
         //PrintMatrix(sim_score[1 - old]);
       }
       break;
-    case ROLESIM:
+    case ROLESIM: {
       InitRoleSim();
       //PrintMatrix(sim_score[0]);
       for (int i = 0; i < ITER_NUM; i++) {
@@ -239,7 +239,8 @@ void CalcSimilarity(algo a) {
         //PrintMatrix(sim_score[1 - old]);
       }
       break;
-    case ROLESIM_PLUS:
+    }
+    case ROLESIM_PLUS: {
       InitRoleSimPlus();
       //PrintMatrix(sim_score[0]);
       for (int i = 0; i < ITER_NUM; i++) {
@@ -249,7 +250,8 @@ void CalcSimilarity(algo a) {
         //PrintMatrix(sim_score[1 - old]);
       }
       break;
-    case ALPHA_ROLESIM:
+    }
+    case ALPHA_ROLESIM: {
       // Initialization is same as RoleSim++
       InitRoleSimPlus();
       //PrintMatrix(sim_score[0]);
@@ -260,7 +262,8 @@ void CalcSimilarity(algo a) {
         //PrintMatrix(sim_score[1 - old]);
       }
       break;
-    case ROLESIM_SEED:
+    }
+    case ROLESIM_SEED: {
       InitRoleSimSeed();
       //PrintMatrix(sim_score[0]);
       for (int i = 0; i < ITER_NUM; i++) {
@@ -269,11 +272,15 @@ void CalcSimilarity(algo a) {
         IterateRoleSimSeed(sim_score[old], sim_score[1 - old]);
         //PrintMatrix(sim_score[1 - old]);
       }
+      break;
+    }
     case PERCOLATE:
+      InitBaseline();
       break;
     default:
       assert(0);
   }
   //PrintMatrix(sim_score[ITER_NUM & 0x1]);
-  OutputMatrix(sim_score[ITER_NUM & 0x1]);
+  if (a != PERCOLATE)
+    OutputMatrix(sim_score[ITER_NUM & 0x1]);
 }

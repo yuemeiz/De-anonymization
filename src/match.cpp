@@ -1,4 +1,5 @@
 #include "match.h"
+#include "expand_when_stuck.h"
 
 using namespace std;
 
@@ -135,7 +136,11 @@ void MatchGraph(algo a) {
       printf("%d\n", correct_cnt);
       break;
     }
-    case PERCOLATE:
+    case PERCOLATE: {
+      Initiate(sim_score[ITER_NUM & 0x1]);
+      ExpandWhenStuck();
+      break;
+    }
     default:
       assert(0);
   }
