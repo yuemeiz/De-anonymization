@@ -56,7 +56,7 @@ void Preprocess() {
   printf("%d\n", small_cnt);
 }
 
-void increase_nb(int idx, int idy) {
+void Increase(int idx, int idy) {
   assert(node_match[idx] == idy && rev_node_match[idy] == idx);
   int nbx = 0, nby = 0;
   for (int i = 0; i < G1[idx].size(); i++) {
@@ -65,10 +65,8 @@ void increase_nb(int idx, int idy) {
       nby = G2[idy][j];
       if (node_match[nbx] == 0 && rev_node_match[nby] == 0) {
         it1 = pairs.find(node_pair(nbx, nby));
-        if (it1 == pairs.end()) {
-          //printf("insert: %d %d\n", nbx, nby);
+        if (it1 == pairs.end())
           pairs.insert(pair<node_pair, int>(node_pair(nbx, nby), 1));
-        }  
         else it1->second += 1;
       }
     }
@@ -83,7 +81,7 @@ void MatchPair(int idx, int idy) {
   total_cnt++;
   if (map_node[idx] == idy)
     correct_cnt++;
-  increase_nb(idx, idy);
+  Increase(idx, idy);
 }
 
 // initiate seed set with pairs with front-seed_num scores
@@ -102,7 +100,7 @@ void InitSeed() {
 void MatchSeed() {
   while (!seed_queue.empty()) {
     MatchPair(seed_queue.front().id1, seed_queue.front().id2);
-    increase_nb(seed_queue.front().id1, seed_queue.front().id2);
+    Increase(seed_queue.front().id1, seed_queue.front().id2);
     seed_queue.pop();
   }
 }
@@ -121,7 +119,6 @@ void MatchCandidates() {
     MatchPair(candidates.top().id1, candidates.top().id2);
     candidates.pop();
   }
-  //printf("pairs: %lu\n", pairs.size());
   for (it1 = pairs.begin(); it1 != pairs.end();) {
     int x = it1->first.id1;
     int y = it1->first.id2;
