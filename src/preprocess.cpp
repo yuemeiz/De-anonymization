@@ -31,10 +31,13 @@ void PreprocessGraph(algo a) {
 
   // Input seed set
   if (a == ROLESIM_SEED || a == PERCOLATE) {
+    seed_set.resize(n1 + 1);
+    for (int i = 0; i <= n1; i++)
+      seed_set[i] = 0;
     fp = fopen("./data/seed.txt", "r");
     assert(fp != nullptr);
     while (fscanf(fp, "%d %d", &idx, &idy) != EOF) {
-      seed_set.insert(node_pair(idx, idy));
+      seed_set[idx] = idy;
     }
     fclose(fp);
   }

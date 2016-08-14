@@ -23,15 +23,13 @@ static void Initiate(const SimMat &score) {
   // Initiate top[N]
   top.resize(n1 + 1);
   for (int i = 1; i <= n1; i++) {
-    double tmp_max = 0.0;
+    double tmp_max = -1;
     for (int j = 1; j <= n2; j++)
       if (tmp_max < rank_score[i][j]) {
         tmp_max = rank_score[i][j];
         top[i] = j;
       }
   }
-  //for (int i = 1; i <= n1; i++)
-  //  printf("top %d : %d\n", i, top[i]);
 
   // Initiate map_node
   map_node.resize(n1 + 1);
@@ -40,7 +38,7 @@ static void Initiate(const SimMat &score) {
 }
 
 static int GetMax() {
-  double tmp_max = 0.0;
+  double tmp_max = -1;
   int tmp_x = 0;
   for (int i = 1; i <= n1; i++)
     if (tmp_max < rank_score[i][top[i]] &&
@@ -53,26 +51,23 @@ static int GetMax() {
 
 static void MatchNode(int idx, int idy) {
   assert(node_match[idx] == 0 && rev_node_match[idy] == 0);
-  printf("match: %d %d\n", idx, idy);
+  //printf("match: %d %d\n", idx, idy);
   node_match[idx] = idy;
   rev_node_match[idy] = idx;
   total_cnt++;
   if (idy == map_node[idx])
     correct_cnt++;
   // update top[N] with free nodes
-  int conflict = 0;
   for (int i = 1; i <= n1; i++)
     // node i cannot be matched with idy anymore, need to find a free node
     if (top[i] == idy && node_match[i] == 0) {
-      conflict++;
-      double tmp_max = 0.0;
+      double tmp_max = -1;
       for (int j = 1; j <= n2; j++)
         if (tmp_max < rank_score[i][j] && rev_node_match[j] == 0) {
           tmp_max = rank_score[i][j];
           top[i] = j;
         }
     }
-  //printf("conflict: %d\n", conflict);
 }
 
 static void IncreaseNb(int idx, int idy, const SimMat &score) {
@@ -98,8 +93,6 @@ void MatchGraph(algo a) {
         int idx = GetMax();
         assert(idx != 0);
         MatchNode(idx, top[idx]);
-        //IncreaseNb(idx, top[idx], sim_score[ITER_NUM & 0x1]);
-        //PrintMatrix(rank_score);
       }
       printf("%d\n", correct_cnt);
       break;
@@ -113,7 +106,6 @@ void MatchGraph(algo a) {
         assert(idx != 0);
         MatchNode(idx, top[idx]);
         IncreaseNb(idx, top[idx], sim_score[ITER_NUM & 0x1]);
-        //PrintMatrix(rank_score);
       }
       printf("%d\n", correct_cnt);
       break;
@@ -121,17 +113,16 @@ void MatchGraph(algo a) {
     case ROLESIM_SEED: {
       Initiate(sim_score[ITER_NUM & 0x1]);
       // Match seeds
-      set<node_pair>::iterator it;
-      for (it = seed_set.begin(); it != seed_set.end(); it++) {
-        MatchNode(it->id1, it->id2);
-        IncreaseNb(it->id1, it->id2, sim_score[ITER_NUM & 0x1]);
-      }
+      for (int i = 1; i <= n1; i++)
+        if (seed_set[i] != 0) {
+          MatchNode(i, seed_set[i]);
+          IncreaseNb(i, seed_set[i], sim_score[ITER_NUM & 0x1]);
+        }
       while (total_cnt < n1) {
         int idx = GetMax();
         assert(idx != 0);
         MatchNode(idx, top[idx]);
         IncreaseNb(idx, top[idx], sim_score[ITER_NUM & 0x1]);
-        //PrintMatrix(rank_score);
       }
       printf("%d\n", correct_cnt);
       break;

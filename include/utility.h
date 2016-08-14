@@ -9,7 +9,7 @@
 
 #define ITER_NUM 5
 #define BETA 0.15
-#define ALPHA 0.6
+#define ALPHA 0.85
 
 using namespace std;
 
@@ -43,7 +43,7 @@ extern Graph G1, G2;
 // Reversed graph
 extern Graph RG1, RG2;
 
-extern set<node_pair> seed_set;
+extern vector<int> seed_set;
 
 // Similarity matrix
 typedef vector< vector<double> > SimMat;

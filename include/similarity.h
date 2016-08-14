@@ -3,7 +3,7 @@
 using namespace std;
 
 SimMat sim_score[2];
-set<node_pair> seed_set;
+vector<int> seed_set;
 
 static void InitBaseline();
 static void InitRoleSim();
