@@ -9,7 +9,7 @@ void PreprocessGraph(algo a) {
 
   fp = fopen("./data/graph1.txt", "r");
   assert(fp != nullptr);
-  fscanf(fp, "%d", &n1);
+  fscanf(fp, "%d %d", &n1, &idy);
   G1.resize(n1 + 1);
   RG1.resize(n1 + 1);
   while (fscanf(fp, "%d %d", &idx, &idy) != EOF) {
@@ -20,7 +20,7 @@ void PreprocessGraph(algo a) {
 
   fp = fopen("./data/graph2.txt", "r");
   assert(fp != nullptr);
-  fscanf(fp, "%d", &n2);
+  fscanf(fp, "%d %d", &n2, &idy);
   G2.resize(n2 + 1);
   RG2.resize(n2 + 1);
   while (fscanf(fp, "%d %d", &idx, &idy) != EOF) {

@@ -51,7 +51,7 @@ static int GetMax() {
 
 static void MatchNode(int idx, int idy) {
   assert(node_match[idx] == 0 && rev_node_match[idy] == 0);
-  //printf("match: %d %d\n", idx, idy);
+  printf("match: %d %d\n", idx, idy);
   node_match[idx] = idy;
   rev_node_match[idy] = idx;
   total_cnt++;
