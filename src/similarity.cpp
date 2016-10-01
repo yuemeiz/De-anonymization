@@ -181,7 +181,8 @@ static void IterateAlphaRoleSim(const SimMat &sim_score, SimMat &new_score) {
     double theta = tmp_max * ALPHA;
     for (int j = 1; j <= n2; j++) {
       if (sim_score[i][j] < theta) {
-        new_score[i][j] = sim_score[i][j];
+        //new_score[i][j] = sim_score[i][j];
+        new_score[i][j] = BETA;
         continue;
       }
       if (G1[i].size() > 0 && G2[j].size() > 0)
