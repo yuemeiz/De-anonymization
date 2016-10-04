@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <set>
+#include <unordered_map>
 #include <assert.h>
 
 #define ITER_NUM 5
@@ -57,6 +58,10 @@ extern vector<int> seed_set;
 typedef vector< vector<double> > SimMat;
 extern SimMat sim_score[2];
 
+// Threshold sieved similarity scores
+typedef vector< unordered_map<int, double> > SSimMat;
+extern SSimMat ssim_score[2];
+
 // Number of nodes
 extern int n1, n2;
 
@@ -67,7 +72,7 @@ extern void PreprocessGraph(algo_iter ai, algo_match am);
 extern void CalcSimilarity(algo_iter ai);
 
 // Analyze intermediate result
-void EvalSimilarity();
+void EvalSimilarity(algo_iter ai);
 
 // Match two graphs based on similarity score
 extern void MatchGraph(algo_match am);

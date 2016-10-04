@@ -17,7 +17,7 @@ using namespace std;
 class hash_func {
  public:
   std::size_t operator () (const node_pair &a) const {
-    return (a.id1 * N + a.id2);
+    return (((size_t)a.id1 << 32) + (size_t)a.id2);
   }
 };
 
@@ -39,13 +39,13 @@ class rank_pair {
   }
 };
 
-bool expand_flag = 0;
-int expand_cnt = 0;
+static bool expand_flag = 0;
+static int expand_cnt = 0;
 
-queue<node_pair> seed_queue;
-priority_queue<rank_pair> candidates;
-unordered_map<node_pair, int, hash_func> pairs, tmp_pairs;
-unordered_map<node_pair, int, hash_func>::iterator it1, it2;
+static queue<node_pair> seed_queue;
+static priority_queue<rank_pair> candidates;
+static unordered_map<node_pair, int, hash_func> pairs, tmp_pairs;
+static unordered_map<node_pair, int, hash_func>::iterator it1, it2;
 
 void Preprocess() {
   int small_cnt = 0;

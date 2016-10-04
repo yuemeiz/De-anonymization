@@ -11,6 +11,6 @@ int main(int argv, char *argc[]) {
   CalcSimilarity(ai);
   MatchGraph(am);
   if (do_interm == 1)
-    EvalSimilarity();
+    EvalSimilarity(ai);
   return 0;
 }
