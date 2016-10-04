@@ -21,3 +21,26 @@ void OutputMatrix(const SimMat &sim_score) {
   }
   fclose(fp);
 }
+
+void EvalSimilarity() {
+  const SimMat &score = sim_score[ITER_NUM & 0x1];
+  int correct_cnt = 0;
+  vector<int> map_node;
+  // Initiate map_node
+  map_node.resize(n1 + 1);
+  for (int i = 1; i <= n1; i++)
+    map_node[i] = i;
+
+  for (int i = 1; i <= n1; i++) {
+    double tmp_max = -1;
+    int top_id = -1;
+    for (int j = 1; j <= n2; j++)
+      if (tmp_max < score[i][j]) {
+        tmp_max = score[i][j];
+        top_id = j;
+      }
+    if (top_id == map_node[i])
+      correct_cnt++;
+  }
+  printf("correct intermediate score: %d\n", correct_cnt);
+}

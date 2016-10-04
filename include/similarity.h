@@ -18,4 +18,4 @@ static void IterateAlphaRoleSim(const SimMat &sim_score, SimMat &new_score);
 static void IterateRoleSimSeed(const SimMat &sim_score, SimMat &new_score);
 
 // Calculate similarity matrix
-void CalcSimilarity(algo a);
+void CalcSimilarity(algo_iter ai);

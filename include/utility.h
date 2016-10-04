@@ -13,13 +13,21 @@
 
 using namespace std;
 
-enum algo {
-  BASELINE,       // 0
-  ROLESIM,        // 1
-  ROLESIM_PLUS,   // 2 Extend RoleSim to directed graph
-  ALPHA_ROLESIM,  // 3 Threshold sieved RoleSim++
-  ROLESIM_SEED,   // 4
-  PERCOLATE       // 5
+enum algo_iter {
+  VOID_ITER,      // 0
+  BASELINE_ITER,  // 1
+  ROLESIM,        // 2 Undiredted
+  ROLESIM_PLUS,   // 3 Extend RoleSim to directed graph
+  ALPHA_ROLESIM,  // 4 Threshold sieved RoleSim++
+  ROLESIM_SEED,   // 5 RoleSim++ with seed
+};
+
+enum algo_match {
+  VOID_MATCH,     // 0
+  BASELINE_MATCH, // 1
+  FEEDBACK,       // 2 Increase neighbours
+  FEEDBACK_SEED,  // 3
+  PERCOLATE       // 4 Graph percolation
 };
 
 class node_pair {
@@ -53,13 +61,16 @@ extern SimMat sim_score[2];
 extern int n1, n2;
 
 // Graph preprocess: read graph and add neighbors to the vector
-extern void PreprocessGraph(algo a);
+extern void PreprocessGraph(algo_iter ai, algo_match am);
 
 // Calculate similarity matrix
-extern void CalcSimilarity(algo a);
+extern void CalcSimilarity(algo_iter ai);
+
+// Analyze intermediate result
+void EvalSimilarity();
 
 // Match two graphs based on similarity score
-extern void MatchGraph(algo a);
+extern void MatchGraph(algo_match am);
 
 void PrintMatrix(const SimMat &sim_score);
 void OutputMatrix(const SimMat &sim_score);

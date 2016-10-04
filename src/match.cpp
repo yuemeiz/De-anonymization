@@ -85,21 +85,23 @@ static void IncreaseNb(int idx, int idy, const SimMat &score) {
     }
 }
 
-void MatchGraph(algo a) {
-  switch (a) {
-    case BASELINE: {
+void MatchGraph(algo_match am) {
+  switch (am) {
+    case VOID_MATCH: {
+      printf("void match");
+      break;
+    }
+    case BASELINE_MATCH: {
       Initiate(sim_score[ITER_NUM & 0x1]);
       while (total_cnt < n1) {
         int idx = GetMax();
         assert(idx != 0);
         MatchNode(idx, top[idx]);
       }
-      printf("%d\n", correct_cnt);
+      printf("correct match: %d\n", correct_cnt);
       break;
     }
-    case ROLESIM:
-    case ROLESIM_PLUS:
-    case ALPHA_ROLESIM: {
+    case FEEDBACK: {
       Initiate(sim_score[ITER_NUM & 0x1]);
       while (total_cnt < n1) {
         int idx = GetMax();
@@ -107,10 +109,10 @@ void MatchGraph(algo a) {
         MatchNode(idx, top[idx]);
         IncreaseNb(idx, top[idx], sim_score[ITER_NUM & 0x1]);
       }
-      printf("%d\n", correct_cnt);
+      printf("correct match: %d\n", correct_cnt);
       break;
     }
-    case ROLESIM_SEED: {
+    case FEEDBACK_SEED: {
       Initiate(sim_score[ITER_NUM & 0x1]);
       // Match seeds
       for (int i = 1; i <= n1; i++)
@@ -124,7 +126,7 @@ void MatchGraph(algo a) {
         MatchNode(idx, top[idx]);
         IncreaseNb(idx, top[idx], sim_score[ITER_NUM & 0x1]);
       }
-      printf("%d\n", correct_cnt);
+      printf("correct match: %d\n", correct_cnt);
       break;
     }
     case PERCOLATE: {

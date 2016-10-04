@@ -16,4 +16,4 @@ static int GetMax();
 static void MatchNode(int idx, int idy);
 static void IncreaseNb(int idx, int idy, const SimMat &score);
 
-void MatchGraph(algo a);
+void MatchGraph(algo_match am);

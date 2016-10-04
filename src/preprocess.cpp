@@ -3,11 +3,11 @@
 using namespace std;
 
 // Graph preprocess: read graph and add neighbors to the vector
-void PreprocessGraph(algo a) {
+void PreprocessGraph(algo_iter ai, algo_match am) {
   FILE *fp = nullptr;
   int idx, idy;
 
-  fp = fopen("./data/graph1.txt", "r");
+  fp = fopen("./data/crawled.txt", "r");
   assert(fp != nullptr);
   fscanf(fp, "%d %d", &n1, &idy);
   G1.resize(n1 + 1);
@@ -18,7 +18,7 @@ void PreprocessGraph(algo a) {
   }
   fclose(fp);
 
-  fp = fopen("./data/graph2.txt", "r");
+  fp = fopen("./data/anonymized.txt", "r");
   assert(fp != nullptr);
   fscanf(fp, "%d %d", &n2, &idy);
   G2.resize(n2 + 1);
@@ -30,7 +30,7 @@ void PreprocessGraph(algo a) {
   fclose(fp);
 
   // Input seed set
-  if (a == ROLESIM_SEED || a == PERCOLATE) {
+  if (ai == ROLESIM_SEED || am == PERCOLATE) {
     seed_set.resize(n1 + 1);
     for (int i = 0; i <= n1; i++)
       seed_set[i] = 0;

@@ -226,9 +226,13 @@ static void IterateRoleSimSeed(const SimMat &sim_score, SimMat &new_score) {
 }
 
 // Calculate similarity matrix
-void CalcSimilarity(algo a) {
-  switch (a) {
-    case BASELINE:
+void CalcSimilarity(algo_iter ai) {
+  switch (ai) {
+    case VOID_ITER: {
+      InitBaseline();
+      break;
+    }
+    case BASELINE_ITER:
       InitBaseline();
       //PrintMatrix(sim_score[0]);
       for (int i = 0; i < ITER_NUM; i++) {
@@ -284,13 +288,10 @@ void CalcSimilarity(algo a) {
       }
       break;
     }
-    case PERCOLATE:
-      InitBaseline();
-      break;
     default:
       assert(0);
   }
   //PrintMatrix(sim_score[ITER_NUM & 0x1]);
-  if (a != PERCOLATE)
+  if (ai != VOID_ITER)
     OutputMatrix(sim_score[ITER_NUM & 0x1]);
 }
