@@ -88,7 +88,7 @@ static void IncreaseNb(int idx, int idy, const SimMat &score) {
 void MatchGraph(algo_match am) {
   switch (am) {
     case VOID_MATCH: {
-      printf("void match");
+      printf("void match\n");
       break;
     }
     case BASELINE_MATCH: {
