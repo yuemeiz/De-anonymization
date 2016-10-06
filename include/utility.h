@@ -59,7 +59,9 @@ typedef vector< vector<double> > SimMat;
 extern SimMat sim_score[2];
 
 // Threshold sieved similarity scores
-typedef vector< unordered_map<int, double> > SSimMat;
+typedef unordered_map<int, double> SVec;
+typedef vector< SVec > SSimMat;
+
 extern SSimMat ssim_score[2];
 
 // Number of nodes

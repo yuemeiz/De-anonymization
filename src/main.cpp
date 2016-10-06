@@ -9,8 +9,10 @@ int main(int argv, char *argc[]) {
   int do_interm = atoi(argc[3]);
   PreprocessGraph(ai, am);
   CalcSimilarity(ai);
-  MatchGraph(am);
-  if (do_interm == 1)
+  if (do_interm == 1){
     EvalSimilarity(ai);
+  }
+  MatchGraph(am);
+
   return 0;
 }
