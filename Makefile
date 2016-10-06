@@ -2,7 +2,7 @@ COMPILER = g++
 INC_DIR = ./include
 SRC_DIR = src
 OBJ_DIR = object
-CXXFLAGS = -Wall -std=c++11
+CXXFLAGS = -std=c++0x #-Wall -std=c++11
 CXXFLAGS += -I$(INC_DIR)
 EXEC = main
 OBJECTS =  $(OBJ_DIR)/main.o \

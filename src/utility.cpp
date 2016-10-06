@@ -49,10 +49,10 @@ void EvalSimilarity(algo_iter ai) {
     for (int i = 1; i <= n1; i++) {
       double tmp_max = -1;
       int top_id = -1;
-      for (auto node : score[i]) {
-        if (tmp_max < node.second) {
-          tmp_max = node.second;
-          top_id = node.first;
+      for (SVec::const_iterator node = score[i].begin(); node != score[i].end(); node ++) {
+        if (tmp_max < node->second) {
+          tmp_max = node->second;
+          top_id = node->first;
         }
       }
       if (top_id == map_node[i])

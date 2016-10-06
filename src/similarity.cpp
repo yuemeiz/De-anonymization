@@ -74,9 +74,9 @@ static void InitAlphaRoleSim() {
                             + max((double)RG1[i].size(), (double)RG2[j].size()))
                             * (1 - BETA) + BETA;
     }
-    printf("%lu ", ssim_score[0][i].size());
+    //printf("%lu ", ssim_score[0][i].size());
   }
-  printf("\n");
+  //printf("\n");
 }
 
 static void InitRoleSimSeed() {
@@ -325,42 +325,19 @@ static void IterateRoleSimPlus(const SimMat &sim_score, SimMat &new_score) {
 }
 
 static void IterateAlphaRoleSim(const SSimMat &sim_score, SSimMat &new_score) {
-  /*for (int i = 1; i <= n1; i++) {
-    // Find highest score
-    double tmp_max = 0;
-    for (int j = 1; j <= n2; j++)
-      if (sim_score[i][j] > tmp_max)
-        tmp_max = sim_score[i][j];
-
-    double theta = tmp_max * ALPHA;
-    for (int j = 1; j <= n2; j++) {
-      if (sim_score[i][j] < theta) {
-        //new_score[i][j] = sim_score[i][j];
-        new_score[i][j] = BETA;
-        continue;
-      }
-      if (G1[i].size() > 0 && G2[j].size() > 0)
-        new_score[i][j] = (MaxMatch(i, j, sim_score, G1, G2)
-                        + MaxMatch(i, j, sim_score, RG1, RG2))
-                        / (max((double)G1[i].size(), (double)G2[j].size())
-                        + max((double)RG1[i].size(), (double)RG2[j].size()))
-                        * (1 - BETA) + BETA;
-      else
-        new_score[i][j] = BETA;
-    }
-  }*/
   for (int i = 1; i <= n1; i++) {
     new_score[i].clear();
     // Find highest score
     double tmp_max = 0;
-    for (auto node : sim_score[i])
-      if (node.second > tmp_max)
-        tmp_max = node.second;
+    for (SVec::const_iterator node = sim_score[i].begin(); node != sim_score[i].end(); node++){
+      if (node->second > tmp_max)
+        tmp_max = node->second;
+    }
 
     double theta = tmp_max * ALPHA;
-    for (auto node : sim_score[i]) {
-      int j = node.first;
-      if (node.second > theta)
+    for (SVec::const_iterator node = sim_score[i].begin(); node != sim_score[i].end(); node++) {
+      int j = node->first;
+      if (node->second > theta)
         new_score[i][j] = (MaxMatchAlpha(i, j, sim_score, G1, G2)
                         + MaxMatchAlpha(i, j, sim_score, RG1, RG2))
                         / (max((double)G1[i].size(), (double)G2[j].size())
@@ -446,11 +423,12 @@ void CalcSimilarity(algo_iter ai) {
         printf("iteration %d\n", i);
         IterateAlphaRoleSim(ssim_score[old], ssim_score[1 - old]);
         //PrintMatrix(sim_score[1 - old]);
+        /*
         for (int j = 1; j <= n1; j++){
           printf("%lu ", ssim_score[1 - old][j].size());
         }
         printf("\n");
-
+        */
       }
       
       

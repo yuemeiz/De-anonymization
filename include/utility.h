@@ -55,7 +55,8 @@ extern Graph RG1, RG2;
 extern vector<int> seed_set;
 
 // Similarity matrix
-typedef vector< vector<double> > SimMat;
+typedef vector< double > Vec;
+typedef vector< Vec > SimMat;
 extern SimMat sim_score[2];
 
 // Threshold sieved similarity scores
