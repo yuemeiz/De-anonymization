@@ -5,6 +5,8 @@ using namespace std;
 SimMat sim_score[2];
 SSimMat ssim_score[2];
 vector<int> seed_set;
+pthread_t threads[MAX_THREAD];
+
 
 static void InitBaseline();
 static void InitRoleSim();

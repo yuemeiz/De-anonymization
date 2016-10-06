@@ -44,6 +44,7 @@ static void InitRoleSimPlus() {
   }
 }
 
+
 static void InitAlphaRoleSim() {
   ssim_score[0].resize(n1 + 1);
   ssim_score[1].resize(n1 + 1);
@@ -324,8 +325,20 @@ static void IterateRoleSimPlus(const SimMat &sim_score, SimMat &new_score) {
   }
 }
 
-static void IterateAlphaRoleSim(const SSimMat &sim_score, SSimMat &new_score) {
-  for (int i = 1; i <= n1; i++) {
+struct ThreadParams{
+  int id;
+  const SSimMat *sim_score;
+  SSimMat *new_score;
+
+};
+
+static void *AlphaRoleSimThread(void *paramIn){
+  struct ThreadParams *param = (struct ThreadParams *)paramIn;
+  int id = param->id;
+  const SSimMat &sim_score = *(param->sim_score);
+  SSimMat &new_score = *(param->new_score);
+
+  for (int i = id; i <= n1; i += MAX_THREAD){
     new_score[i].clear();
     // Find highest score
     double tmp_max = 0;
@@ -345,6 +358,23 @@ static void IterateAlphaRoleSim(const SSimMat &sim_score, SSimMat &new_score) {
                         * (1 - BETA) + BETA;
     }
   }
+  return NULL;
+}
+
+static void IterateAlphaRoleSim(const SSimMat &sim_score, SSimMat &new_score) {
+  struct ThreadParams params[MAX_THREAD];
+  for (int i = 0; i < MAX_THREAD; i++){
+    params[i].id = i;
+    params[i].sim_score = &sim_score;
+    params[i].new_score = &new_score;
+  }
+  for (int i = 0; i < MAX_THREAD; i++){
+    pthread_create(&threads[i], NULL, AlphaRoleSimThread, (void *)&params[i]);
+  }
+	for (int i = 0; i < MAX_THREAD; i++) {
+    pthread_join(threads[i], NULL);
+  }
+  
 }
 
 static void IterateRoleSimSeed(const SimMat &sim_score, SimMat &new_score) {

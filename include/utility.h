@@ -6,12 +6,12 @@
 #include <vector>
 #include <set>
 #include <unordered_map>
-#include <assert.h>
+#include <cassert>
 
 #define ITER_NUM 5
 #define BETA 0.15
 #define ALPHA 0.85
-
+#define MAX_THREAD 8
 using namespace std;
 
 enum algo_iter {
