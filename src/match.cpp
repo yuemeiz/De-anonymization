@@ -61,6 +61,7 @@ static void InitiateAlpha(SSimMat &score) {
   }
 
   // Initiate map_node
+  // n1 is the crawled, n2 is the anonymized
   map_node.resize(n1 + 1);
   for (int i = 1; i <= n1; i++)
     map_node[i] = i;
@@ -91,13 +92,13 @@ static int GetMaxAlpha(SSimMat &score) {
   return tmp_x;
 }
 
-static void MatchNode(int idx, int idy) {
+static void MatchNode(int idx, int idy, int overlap) {
   assert(node_match[idx] == 0 && rev_node_match[idy] == 0);
   //printf("match: %d %d\n", idx, idy);
   node_match[idx] = idy;
   rev_node_match[idy] = idx;
   total_cnt++;
-  if (idy == map_node[idx])
+  if (idy == map_node[idx] && idx <= overlap)
     correct_cnt++;
   // update top[N] with free nodes
   for (int i = 1; i <= n1; i++)
@@ -113,13 +114,13 @@ static void MatchNode(int idx, int idy) {
 }
 
 
-static void MatchNodeAlpha(int idx, int idy, SSimMat &score) {
+static void MatchNodeAlpha(int idx, int idy, SSimMat &score, int overlap) {
   assert(node_match[idx] == 0 && rev_node_match[idy] == 0);
   //printf("match: %d %d\n", idx, idy);
   node_match[idx] = idy;
   rev_node_match[idy] = idx;
   total_cnt++;
-  if (idy == map_node[idx])
+  if (idy == map_node[idx] && idx <= overlap)
     correct_cnt++;
   // update top[N] with free nodes
   for (int i = 1; i <= n1; i++)
@@ -172,7 +173,7 @@ static void IncreaseNbAlpha(int idx, int idy, SSimMat &score) {
 
 
 
-void MatchGraph(algo_match am) {
+void MatchGraph(algo_match am, int overlap) {
   switch (am) {
     case VOID_MATCH: {
       printf("void match\n");
@@ -183,7 +184,7 @@ void MatchGraph(algo_match am) {
       while (total_cnt < n1) {
         int idx = GetMax();
         assert(idx != 0);
-        MatchNode(idx, top[idx]);
+        MatchNode(idx, top[idx], overlap);
       }
       printf("correct match: %d\n", correct_cnt);
       break;
@@ -196,10 +197,8 @@ void MatchGraph(algo_match am) {
         int idx = GetMaxAlpha(ssim_score[ITER_NUM & 0x1]);
         if (idx == 0) break;
         assert(idx != 0);
-        MatchNodeAlpha(idx, top[idx], ssim_score[ITER_NUM & 0x1]);
-        //MatchNode(idx, top[idx]);
+        MatchNodeAlpha(idx, top[idx], ssim_score[ITER_NUM & 0x1], overlap);
         IncreaseNbAlpha(idx, top[idx], ssim_score[ITER_NUM & 0x1]);
-        //IncreaseNb(idx, top[idx], sim_score[ITER_NUM & 0x1]);
       }
       printf("correct match: %d\n", correct_cnt);
       break;
@@ -209,13 +208,13 @@ void MatchGraph(algo_match am) {
       // Match seeds
       for (int i = 1; i <= n1; i++)
         if (seed_set[i] != 0) {
-          MatchNode(i, seed_set[i]);
+          MatchNode(i, seed_set[i], overlap);
           IncreaseNb(i, seed_set[i], sim_score[ITER_NUM & 0x1]);
         }
       while (total_cnt < n1) {
         int idx = GetMax();
         assert(idx != 0);
-        MatchNode(idx, top[idx]);
+        MatchNode(idx, top[idx], overlap);
         IncreaseNb(idx, top[idx], sim_score[ITER_NUM & 0x1]);
       }
       printf("correct match: %d\n", correct_cnt);

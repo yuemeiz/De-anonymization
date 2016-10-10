@@ -13,7 +13,7 @@ static int correct_cnt = 0;
 
 static void Initiate(const SimMat &score);
 static int GetMax();
-static void MatchNode(int idx, int idy);
+static void MatchNode(int idx, int idy, int overlap);
 static void IncreaseNb(int idx, int idy, const SimMat &score);
 
 void MatchGraph(algo_match am);

@@ -45,12 +45,12 @@ static void InitRoleSimPlus() {
 }
 
 
-static void InitAlphaRoleSim() {
-  ssim_score[0].resize(n1 + 1);
-  ssim_score[1].resize(n1 + 1);
-  
-  for (int i = 1; i <= n1; i++) {
-    // Find highest score
+static void *InitAlphaRoleSimThread(void *paramIn){
+  struct ThreadParams *param = (struct ThreadParams *)paramIn;
+  int id = param->id;
+
+  for (int i = id; i <= n1; i += MAX_THREAD){
+      // Find highest score
     double tmp_max = BETA;
     for (int j = 1; j <= n2; j++) {
       double tmp_score = (min((double)G1[i].size(), (double)G2[j].size())
@@ -75,9 +75,28 @@ static void InitAlphaRoleSim() {
                             + max((double)RG1[i].size(), (double)RG2[j].size()))
                             * (1 - BETA) + BETA;
     }
-    //printf("%lu ", ssim_score[0][i].size());
   }
-  //printf("\n");
+  return NULL;
+}
+
+static void InitAlphaRoleSim() {
+  ssim_score[0].resize(n1 + 1);
+  ssim_score[1].resize(n1 + 1);
+
+  struct ThreadParams params[MAX_THREAD];
+  for (int i = 0; i < MAX_THREAD; i++){
+    params[i].id = i;
+  }
+
+  for (int i = 0; i < MAX_THREAD; i++){
+    pthread_create(&threads[i], NULL, InitAlphaRoleSimThread, (void *)&params[i]);
+  }
+
+	for (int i = 0; i < MAX_THREAD; i++) {
+    pthread_join(threads[i], NULL);
+  }
+  
+
 }
 
 static void InitRoleSimSeed() {
@@ -324,13 +343,6 @@ static void IterateRoleSimPlus(const SimMat &sim_score, SimMat &new_score) {
     }
   }
 }
-
-struct ThreadParams{
-  int id;
-  const SSimMat *sim_score;
-  SSimMat *new_score;
-
-};
 
 static void *AlphaRoleSimThread(void *paramIn){
   struct ThreadParams *param = (struct ThreadParams *)paramIn;

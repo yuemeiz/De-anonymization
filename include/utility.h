@@ -11,7 +11,7 @@
 #define ITER_NUM 5
 #define BETA 0.15
 #define ALPHA 0.85
-#define MAX_THREAD 8
+#define MAX_THREAD 16
 using namespace std;
 
 enum algo_iter {
@@ -78,7 +78,7 @@ extern void CalcSimilarity(algo_iter ai);
 void EvalSimilarity(algo_iter ai);
 
 // Match two graphs based on similarity score
-extern void MatchGraph(algo_match am);
+extern void MatchGraph(algo_match am, int overlap);
 
 void PrintMatrix(const SimMat &sim_score);
 void OutputMatrix(const SimMat &sim_score);

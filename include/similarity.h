@@ -7,6 +7,12 @@ SSimMat ssim_score[2];
 vector<int> seed_set;
 pthread_t threads[MAX_THREAD];
 
+struct ThreadParams{
+  int id;
+  const SSimMat *sim_score;
+  SSimMat *new_score;
+};
+
 
 static void InitBaseline();
 static void InitRoleSim();
