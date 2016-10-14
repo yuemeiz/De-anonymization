@@ -12,6 +12,7 @@
 #define BETA 0.15
 #define ALPHA 0.85
 #define MAX_THREAD 16
+#define THETA 0.80
 using namespace std;
 
 enum algo_iter {

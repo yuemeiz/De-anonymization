@@ -6,6 +6,7 @@ SimMat sim_score[2];
 SSimMat ssim_score[2];
 vector<int> seed_set;
 pthread_t threads[MAX_THREAD];
+vector<int> initCount;
 
 struct ThreadParams{
   int id;
