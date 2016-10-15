@@ -51,7 +51,7 @@ static void *InitAlphaRoleSimThread(void *paramIn){
   
   for (int i = id; i <= n1; i += MAX_THREAD){
     int iterCount = 0;
-
+    
     double w1 = double(G1[i].size());
     double w2 = double(RG1[i].size());
     double degreeSum = w1 + w2;
@@ -81,7 +81,7 @@ static void *InitAlphaRoleSimThread(void *paramIn){
       
     }
     initCount[i] = iterCount;
-
+    
     /*
       // Find highest score
     double tmp_max = BETA;
@@ -95,7 +95,6 @@ static void *InitAlphaRoleSimThread(void *paramIn){
         tmp_max = tmp_score;
     }
 
-    int iterCount = 0; 
     double theta = tmp_max * ALPHA;
     for (int j = 1; j <= n2; j++) {
       double tmp_score = (min((double)G1[i].size(), (double)G2[j].size())
@@ -113,7 +112,7 @@ static void *InitAlphaRoleSimThread(void *paramIn){
       }
     }
     initCount[i] = iterCount;
-    */
+    */    
 
   }
   return NULL;
@@ -516,12 +515,19 @@ void CalcSimilarity(algo_iter ai) {
       break;
     }
     case ALPHA_ROLESIM: {
+      timer t;
+      t.start();
       InitAlphaRoleSim();
+      t.end();
+      printf("Init finished using %f sec\n", t.delta);
       //PrintMatrix(sim_score[0]);
       for (int i = 0; i < ITER_NUM; i++) {
         int old = i & 0x1;
-        printf("iteration %d\n", i);
+        printf("iteration %d\n", i + 1);
+        t.start();
         IterateAlphaRoleSim(ssim_score[old], ssim_score[1 - old]);
+        t.end();
+        printf("iteration %d finished using %f sec\n", i + 1, t.delta);
         //PrintMatrix(sim_score[1 - old]);
         /*
         for (int j = 1; j <= n1; j++){

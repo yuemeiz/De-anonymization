@@ -14,7 +14,12 @@ int main(int argv, char *argc[]) {
   if (do_interm == 1){
     EvalSimilarity(ai);
   }
+  
+  timer t;
+  t.start();
   MatchGraph(am, overlap);
-
+  t.end();
+  printf("match phase using %f sec\n", t.delta);
+  
   return 0;
 }

@@ -8,12 +8,13 @@
 #include <unordered_map>
 #include <cassert>
 #include <algorithm>
+#include <sys/time.h>
 
 #define ITER_NUM 5
 #define BETA 0.15
 #define ALPHA 0.85
-#define MAX_THREAD 8
-#define THETA 0.80
+#define MAX_THREAD 16
+#define THETA 0.85
 using namespace std;
 
 enum algo_iter {
@@ -46,6 +47,26 @@ class node_pair {
   bool operator == (const node_pair &a) const {
     return (id1 == a.id1 && id2 == a.id2);
   }
+};
+
+class timer{
+    long int time_start, time_end;
+public:
+    double delta;
+    timer(){
+    }
+    void start(){
+        struct timeval tval;
+	    gettimeofday(&tval, NULL);
+    	time_start = tval.tv_sec * 1000 + tval.tv_usec / 1000;
+    }
+    void end(){
+        struct timeval tval;
+	    gettimeofday(&tval, NULL);
+    	time_end = tval.tv_sec * 1000 + tval.tv_usec / 1000;
+        delta = (double)(time_end - time_start) / 1000;
+    }
+
 };
 
 // G1: crawled; G2: anonymized
