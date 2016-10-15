@@ -7,11 +7,12 @@
 #include <set>
 #include <unordered_map>
 #include <cassert>
+#include <algorithm>
 
 #define ITER_NUM 5
 #define BETA 0.15
 #define ALPHA 0.85
-#define MAX_THREAD 16
+#define MAX_THREAD 8
 #define THETA 0.80
 using namespace std;
 

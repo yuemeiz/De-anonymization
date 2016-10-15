@@ -2,17 +2,46 @@
 
 using namespace std;
 
+class init_sort{
+public:
+  double degreeSum;
+  double x, y;
+  int id;
+
+  init_sort(double v1, double v2, double v3, int v4){
+      degreeSum = v1;
+      x = v2;
+      y = v3;
+      id = v4;
+  }
+
+  init_sort(double v1){
+      degreeSum = v1;
+  }
+
+  init_sort(){
+
+  }
+
+  bool operator < (const init_sort &a) const {
+    return degreeSum < a.degreeSum;
+  }
+  
+};
+
+class thread_params{
+public:
+  int id;
+  const SSimMat *sim_score;
+  SSimMat *new_score;
+};
+
 SimMat sim_score[2];
 SSimMat ssim_score[2];
 vector<int> seed_set;
 pthread_t threads[MAX_THREAD];
 vector<int> initCount;
-
-struct ThreadParams{
-  int id;
-  const SSimMat *sim_score;
-  SSimMat *new_score;
-};
+vector<init_sort> sortedArray;
 
 
 static void InitBaseline();
