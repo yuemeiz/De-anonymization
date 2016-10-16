@@ -1,5 +1,7 @@
 #include "utility.h"
 
+#define BATCH 100
+
 using namespace std;
 
 class init_sort{
@@ -29,19 +31,30 @@ public:
   
 };
 
-class thread_params{
+class alpha_thread_params{
 public:
   int id;
   const SSimMat *sim_score;
   SSimMat *new_score;
 };
 
+class baseline_thread_params{
+public:
+  int id;
+  const SimMat *sim_score;
+  SimMat *new_score;
+};
+
+
 SimMat sim_score[2];
 SSimMat ssim_score[2];
 vector<int> seed_set;
 pthread_t threads[MAX_THREAD];
 vector<int> initCount;
+vector<int> initIter;
 vector<init_sort> sortedArray;
+pthread_mutex_t alpha_mutex = PTHREAD_MUTEX_INITIALIZER;
+int parallel_progress;
 
 
 static void InitBaseline();

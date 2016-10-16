@@ -50,22 +50,22 @@ class node_pair {
 };
 
 class timer{
-    long int time_start, time_end;
+  long int time_start, time_end;
 public:
-    double delta;
-    timer(){
-    }
-    void start(){
-        struct timeval tval;
-	    gettimeofday(&tval, NULL);
-    	time_start = tval.tv_sec * 1000 + tval.tv_usec / 1000;
-    }
-    void end(){
-        struct timeval tval;
-	    gettimeofday(&tval, NULL);
-    	time_end = tval.tv_sec * 1000 + tval.tv_usec / 1000;
-        delta = (double)(time_end - time_start) / 1000;
-    }
+  double delta;
+  timer(){
+  }
+  void start(){
+      struct timeval tval;
+    gettimeofday(&tval, NULL);
+    time_start = tval.tv_sec * 1000 + tval.tv_usec / 1000;
+  }
+  void end(){
+      struct timeval tval;
+    gettimeofday(&tval, NULL);
+    time_end = tval.tv_sec * 1000 + tval.tv_usec / 1000;
+      delta = (double)(time_end - time_start) / 1000;
+  }
 
 };
 
