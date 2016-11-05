@@ -5,11 +5,11 @@ using namespace std;
 // Graph preprocess: read graph and add neighbors to the vector
 void PreprocessGraph(algo_iter ai, algo_match am) {
   FILE *fp = nullptr;
-  int idx, idy;
+  int idx, idy, r;
 
   fp = fopen("./data/crawled.txt", "r");
   assert(fp != nullptr);
-  fscanf(fp, "%d %d", &n1, &idy);
+  r = fscanf(fp, "%d %d", &n1, &idy);
   G1.resize(n1 + 1);
   RG1.resize(n1 + 1);
   while (fscanf(fp, "%d %d", &idx, &idy) != EOF) {
@@ -20,7 +20,7 @@ void PreprocessGraph(algo_iter ai, algo_match am) {
 
   fp = fopen("./data/anonymized.txt", "r");
   assert(fp != nullptr);
-  fscanf(fp, "%d %d", &n2, &idy);
+  r = fscanf(fp, "%d %d", &n2, &idy);
   G2.resize(n2 + 1);
   RG2.resize(n2 + 1);
   while (fscanf(fp, "%d %d", &idx, &idy) != EOF) {

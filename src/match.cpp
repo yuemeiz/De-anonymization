@@ -153,7 +153,6 @@ static void IncreaseNb(int idx, int idy, const SimMat &score) {
 }
 
 static void IncreaseNbAlpha(int idx, int idy, SSimMat &score) {
-
   int nbx = 0, nby = 0;
   for (int i = 0; i < G1[idx].size(); i++)
     for (int j = 0; j < G2[idy].size(); j++) {
@@ -190,6 +189,18 @@ void MatchGraph(algo_match am, int overlap) {
       break;
     }
     case FEEDBACK: {
+      Initiate(sim_score[ITER_NUM & 0x1]);
+      while (total_cnt < n1) {
+        int idx = GetMax();
+        if (idx == 0) break;
+        assert(idx != 0);
+        MatchNode(idx, top[idx], overlap);
+        IncreaseNb(idx, top[idx], sim_score[ITER_NUM & 0x1]);
+      }
+      printf("correct match: %d\n", correct_cnt);
+      break;
+    }
+    case FEEDBACK_ALPHA: {
       //Initiate(sim_score[ITER_NUM & 0x1]);
       InitiateAlpha(ssim_score[ITER_NUM & 0x1]);
       while (total_cnt < n1) {
@@ -203,6 +214,7 @@ void MatchGraph(algo_match am, int overlap) {
       printf("correct match: %d\n", correct_cnt);
       break;
     }
+
     case FEEDBACK_SEED: {
       Initiate(sim_score[ITER_NUM & 0x1]);
       // Match seeds

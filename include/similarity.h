@@ -45,6 +45,13 @@ public:
   SimMat *new_score;
 };
 
+class rolesimplus_thread_params{
+public:
+  int id;
+  const SimMat *sim_score;
+  SimMat *new_score;
+};
+
 
 SimMat sim_score[2];
 SSimMat ssim_score[2];

@@ -30,8 +30,9 @@ enum algo_match {
   VOID_MATCH,     // 0
   BASELINE_MATCH, // 1
   FEEDBACK,       // 2 Increase neighbours
-  FEEDBACK_SEED,  // 3
-  PERCOLATE       // 4 Graph percolation
+  FEEDBACK_ALPHA, // 3 Increase neighbours
+  FEEDBACK_SEED,  // 4
+  PERCOLATE       // 5 Graph percolation
 };
 
 class node_pair {
