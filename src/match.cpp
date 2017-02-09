@@ -216,18 +216,20 @@ void MatchGraph(algo_match am, int overlap) {
     }
 
     case FEEDBACK_SEED: {
-      Initiate(sim_score[ITER_NUM & 0x1]);
+      InitiateAlpha(ssim_score[ITER_NUM & 0x1]);
       // Match seeds
-      for (int i = 1; i <= n1; i++)
+      for (int i = 1; i <= n1; i++){
         if (seed_set[i] != 0) {
-          MatchNode(i, seed_set[i], overlap);
-          IncreaseNb(i, seed_set[i], sim_score[ITER_NUM & 0x1]);
+          MatchNodeAlpha(i, seed_set[i], ssim_score[ITER_NUM & 0x1], overlap);
+          IncreaseNbAlpha(i, seed_set[i], ssim_score[ITER_NUM & 0x1]);
         }
+      }
       while (total_cnt < n1) {
-        int idx = GetMax();
+        int idx = GetMaxAlpha(ssim_score[ITER_NUM & 0x1]);
+        if (idx == 0) break;
         assert(idx != 0);
-        MatchNode(idx, top[idx], overlap);
-        IncreaseNb(idx, top[idx], sim_score[ITER_NUM & 0x1]);
+        MatchNodeAlpha(idx, top[idx], ssim_score[ITER_NUM & 0x1], overlap);
+        IncreaseNbAlpha(idx, top[idx], ssim_score[ITER_NUM & 0x1]);
       }
       printf("correct match: %d\n", correct_cnt);
       break;
@@ -235,6 +237,31 @@ void MatchGraph(algo_match am, int overlap) {
     case PERCOLATE: {
       Initiate(sim_score[ITER_NUM & 0x1]);
       ExpandWhenStuck();
+      break;
+    }
+    case COMPARE_TWO: {
+      Initiate(sim_score[ITER_NUM & 0x1]);
+      while (total_cnt < n1) {
+        int idx = GetMax();
+        assert(idx != 0);
+        MatchNode(idx, top[idx], overlap);
+      }
+      printf("correct match: %d\n", correct_cnt);
+      
+      total_cnt = correct_cnt = 0;
+      top.clear();
+      node_match.clear();
+      rev_node_match.clear();
+
+      Initiate(sim_score[ITER_NUM & 0x1]);
+      while (total_cnt < n1) {
+        int idx = GetMax();
+        if (idx == 0) break;
+        assert(idx != 0);
+        MatchNode(idx, top[idx], overlap);
+        IncreaseNb(idx, top[idx], sim_score[ITER_NUM & 0x1]);
+      }
+      printf("correct match: %d\n", correct_cnt);
       break;
     }
     default:

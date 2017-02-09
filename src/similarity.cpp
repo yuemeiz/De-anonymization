@@ -29,7 +29,11 @@ static void *InitBaselineThread(void *paramIn){
     }
     for (int i = batch_start; i <= batch_end; i += 1){
       for (int j = 1; j <= n2; j++){
-        sim_score[0][i][j] = 1; 
+//        sim_score[0][i][j] = 1;
+      sim_score[0][i][j] = min((double)G1[i].size(), (double)G2[j].size())
+                         / max((double)G1[i].size(), (double)G2[j].size())
+                         * (1 - BETA) + BETA;
+ 
       }
     }
   }
@@ -244,26 +248,20 @@ static void InitAlphaRoleSim() {
 
 }
 
-static void InitRoleSimSeed() {
-  sim_score[0].resize(n1 + 1);
-  sim_score[1].resize(n1 + 1);
+static void ResetSeedSimilarity(){
   for (int i = 1; i <= n1; i++) {
-    sim_score[0][i].resize(n2 + 1);
-    sim_score[1][i].resize(n2 + 1);
     if (seed_set[i] != 0) {
       for (int j = 1; j <= n2; j++)
-        sim_score[0][i][j] = BETA;
-      sim_score[0][i][seed_set[i]] = 1;
+        ssim_score[0][i][j] = BETA;
+      ssim_score[0][i][seed_set[i]] = 1;
       continue;
     }
-    for (int j = 1; j <= n2; j++) {
-      sim_score[0][i][j] = (min((double)G1[i].size(), (double)G2[j].size())
-                         + min((double)RG1[i].size(), (double)RG2[j].size()))
-                         / (max((double)G1[i].size(), (double)G2[j].size())
-                         + max((double)RG1[i].size(), (double)RG2[j].size()))
-                         * (1 - BETA) + BETA;
-    }
   }
+}
+
+static void InitAlphaRoleSimSeed() {
+  InitAlphaRoleSim();
+  ResetSeedSimilarity();
 }
 
 static double MaxMatch(int x, int y, const SimMat &sim_score, const Graph &G1, const Graph &G2) {
@@ -451,8 +449,13 @@ static void *BaselineThread(void *paramIn){
 
   for (int i = id; i <= n1; i += MAX_THREAD){
     for (int j = 1; j <= n2; j++) {
-      new_score[i][j] = MaxMatch(i, j, sim_score, G1, G2);
-    }    
+      if (G1[i].size() > 0 && G2[j].size() > 0)
+        new_score[i][j] = MaxMatch(i, j, sim_score, G1, G2)
+                        / max((double)G1[i].size(), (double)G2[j].size())
+                        * (1 - BETA) + BETA;
+      else
+        new_score[i][j] = BETA;
+      }    
   }
   return NULL;
 }
@@ -578,32 +581,9 @@ static void IterateAlphaRoleSim(const SSimMat &sim_score, SSimMat &new_score) {
   
 }
 
-static void IterateRoleSimSeed(const SimMat &sim_score, SimMat &new_score) {
-  for (int i = 1; i <= n1; i++) {
-    if (seed_set[i] != 0)
-      continue;
-      // Find highest score
-    double tmp_max = 0;
-    for (int j = 1; j <= n2; j++)
-      if (sim_score[i][j] > tmp_max)
-        tmp_max = sim_score[i][j];
-
-    double theta = tmp_max * ALPHA;
-    for (int j = 1; j <= n2; j++) {
-      if (sim_score[i][j] < theta) {
-        new_score[i][j] = sim_score[i][j];
-        continue;
-      }
-      if (G1[i].size() > 0 && G2[j].size() > 0)
-        new_score[i][j] = (MaxMatch(i, j, sim_score, G1, G2)
-                        + MaxMatch(i, j, sim_score, RG1, RG2))
-                        / (max((double)G1[i].size(), (double)G2[j].size())
-                        + max((double)RG1[i].size(), (double)RG2[j].size()))
-                        * (1 - BETA) + BETA;
-      else
-        new_score[i][j] = BETA;
-    }
-  }
+static void IterateAlphaRoleSimSeed(const SSimMat &sim_score, SSimMat &new_score) {
+  IterateAlphaRoleSim(sim_score, new_score);
+  ResetSeedSimilarity();
 }
 
 // Calculate similarity matrix
@@ -625,12 +605,12 @@ void CalcSimilarity(algo_iter ai) {
       break;
     }
     case ROLESIM: {
-      InitRoleSim();
+      InitBaseline();
       //PrintMatrix(sim_score[0]);
       for (int i = 0; i < ITER_NUM; i++) {
         int old = i & 0x1;
         printf("iteration %d\n", i);
-        IterateRoleSim(sim_score[old], sim_score[1 - old]);
+        IterateBaseline(sim_score[old], sim_score[1 - old]);
         //PrintMatrix(sim_score[1 - old]);
       }
       break;
@@ -652,7 +632,7 @@ void CalcSimilarity(algo_iter ai) {
       InitAlphaRoleSim();
       t.end();
       printf("Init finished using %f sec\n", t.delta);
-      //PrintMatrix(sim_score[0]);
+      
       for (int i = 0; i < ITER_NUM; i++) {
         int old = i & 0x1;
         printf("iteration %d\n", i + 1);
@@ -660,26 +640,19 @@ void CalcSimilarity(algo_iter ai) {
         IterateAlphaRoleSim(ssim_score[old], ssim_score[1 - old]);
         t.end();
         printf("iteration %d finished using %f sec\n", i + 1, t.delta);
-        //PrintMatrix(sim_score[1 - old]);
-        /*
-        for (int j = 1; j <= n1; j++){
-          printf("%lu ", ssim_score[1 - old][j].size());
-        }
-        printf("\n");
-        */
+        //OutputMatrix(ssim_score[1 - old]);
       }
-      
       
       break;
     }
-    case ROLESIM_SEED: {
-      InitRoleSimSeed();
+    case ALPHA_ROLESIM_SEED: {
+      InitAlphaRoleSimSeed();
       //PrintMatrix(sim_score[0]);
       for (int i = 0; i < ITER_NUM; i++) {
         int old = i & 0x1;
         printf("iteration %d\n", i);
         //IterateAlphaRoleSim(sim_score[old], sim_score[1 - old]);
-        IterateRoleSimSeed(sim_score[old], sim_score[1 - old]);
+        IterateAlphaRoleSimSeed(ssim_score[old], ssim_score[1 - old]);
         //PrintMatrix(sim_score[1 - old]);
       }
       break;

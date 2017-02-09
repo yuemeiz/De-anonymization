@@ -30,14 +30,16 @@ void PreprocessGraph(algo_iter ai, algo_match am) {
   fclose(fp);
 
   // Input seed set
-  if (ai == ROLESIM_SEED || am == PERCOLATE) {
+  if (ai == ALPHA_ROLESIM_SEED || am == PERCOLATE) {
     seed_set.resize(n1 + 1);
     for (int i = 0; i <= n1; i++)
       seed_set[i] = 0;
     fp = fopen("./data/seed.txt", "r");
-    assert(fp != nullptr);
-    while (fscanf(fp, "%d %d", &idx, &idy) != EOF) {
-      seed_set[idx] = idy;
+    //assert(fp != nullptr);
+    if (fp != nullptr) {
+      while (fscanf(fp, "%d %d", &idx, &idy) != EOF) {
+        seed_set[idx] = idy;
+      }
     }
     fclose(fp);
   }

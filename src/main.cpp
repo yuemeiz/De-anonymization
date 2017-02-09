@@ -12,7 +12,7 @@ int main(int argv, char *argc[]) {
   printf("PreprocessGraph() finished.\n");
   CalcSimilarity(ai);
   if (do_interm == 1){
-    EvalSimilarity(ai);
+    EvalSimilarity(ai, overlap);
   }
   
   timer t;

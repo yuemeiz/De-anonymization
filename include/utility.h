@@ -18,12 +18,12 @@
 using namespace std;
 
 enum algo_iter {
-  VOID_ITER,      // 0
-  BASELINE_ITER,  // 1
-  ROLESIM,        // 2 Undiredted
-  ROLESIM_PLUS,   // 3 Extend RoleSim to directed graph
-  ALPHA_ROLESIM,  // 4 Threshold sieved RoleSim++
-  ROLESIM_SEED,   // 5 RoleSim++ with seed
+  VOID_ITER,            // 0
+  BASELINE_ITER,        // 1
+  ROLESIM,              // 2 Undiredted
+  ROLESIM_PLUS,         // 3 Extend RoleSim to directed graph
+  ALPHA_ROLESIM,        // 4 Threshold sieved RoleSim++
+  ALPHA_ROLESIM_SEED,   // 5 RoleSim++ with seed
 };
 
 enum algo_match {
@@ -32,7 +32,8 @@ enum algo_match {
   FEEDBACK,       // 2 Increase neighbours
   FEEDBACK_ALPHA, // 3 Increase neighbours
   FEEDBACK_SEED,  // 4
-  PERCOLATE       // 5 Graph percolation
+  PERCOLATE,      // 5 Graph percolation
+  COMPARE_TWO     // 6 Compare NeighborMatch && BaselineMatch
 };
 
 class node_pair {
@@ -99,10 +100,10 @@ extern void PreprocessGraph(algo_iter ai, algo_match am);
 extern void CalcSimilarity(algo_iter ai);
 
 // Analyze intermediate result
-void EvalSimilarity(algo_iter ai);
+void EvalSimilarity(algo_iter ai, int overlap);
 
 // Match two graphs based on similarity score
 extern void MatchGraph(algo_match am, int overlap);
 
 void PrintMatrix(const SimMat &sim_score);
-void OutputMatrix(const SimMat &sim_score);
+void OutputMatrix(const SSimMat &sim_score);
