@@ -19,7 +19,7 @@ int main(int argv, char *argc[]) {
   t.start();
   MatchGraph(am, overlap);
   t.end();
-  printf("match phase using %f sec\n", t.delta);
+  printf("Matching phase using %f sec\n", t.delta);
   
   return 0;
 }
